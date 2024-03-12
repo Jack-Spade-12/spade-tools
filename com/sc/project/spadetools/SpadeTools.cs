@@ -10,4 +10,3 @@ namespace com.sc.project.spadetools {
     }
 
 }
-
