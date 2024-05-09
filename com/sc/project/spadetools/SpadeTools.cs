@@ -4,7 +4,8 @@ namespace com.sc.project.spadetools {
     class SpadeTools {
 
         static void Main(string[] args) {
-            Console.WriteLine($"Text");
+            string[] arguments = {"C:\\Users\\seth\\Desktop"};
+            new ExtractFileNames(arguments);    
         }
 
     }
