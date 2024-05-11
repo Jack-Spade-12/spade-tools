@@ -54,9 +54,9 @@ namespace com.sc.project.spadetools {
                 Process(RootDirectory);
                 WriteIntoFile();
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                Console.Write(e.Message);
             }
         }
 
@@ -71,19 +71,17 @@ namespace com.sc.project.spadetools {
             {
                 int argumentsSize = arguments.Length;
 
-                // if only filepath is provided, run default
-                if (argumentsSize == 1)
-                {
-                    SetProperties("--root", arguments[0]);
-                    SetProperties("--save", RootDirectory + "\\extractedFileNames.txt");
-                    return;
-                }
-
                 for (int i = 0; i < argumentsSize; i++)
                 {
                     if (IsProcess(arguments[i]))
                     {
                         SetProperties(arguments[i], i + 1 < argumentsSize ? arguments[i + 1] : String.Empty);
+                    }
+                    // If first argument is not process, assume it is root directory
+                    else if (i == 0)
+                    {
+                        SetProperties("--root", arguments[0]);
+                        SetProperties("--save", RootDirectory + "\\extractedFileNames.txt");
                     }
                 }
             }
