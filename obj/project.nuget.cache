@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "Z+CVaIeZLqSLunCzpGFybHGnKAuLXMVSwoHZP7rvL4R4fMTHtLo9kkc+ZxXtsChRJg/HHYVS/rek85fiKFG80w==",
+  "dgSpecHash": "If4tht2bahmcGwnHRvGvi4LqsskUmS4F9KZ+tKBkUstvASwJlP2uR5megewB/9OAZJrBAHau7I8y/2xjWLDCOA==",
   "success": true,
   "projectFilePath": "D:\\Shortcuts\\Init\\Projects\\spade-tools\\spade-tools.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\seth\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.15\\microsoft.windowsdesktop.app.ref.7.0.15.nupkg.sha512",
+    "C:\\Users\\seth\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.15\\microsoft.netcore.app.ref.7.0.15.nupkg.sha512",
+    "C:\\Users\\seth\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.15\\microsoft.aspnetcore.app.ref.7.0.15.nupkg.sha512",
+    "C:\\Users\\seth\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\7.0.15\\microsoft.netcore.app.host.win-x64.7.0.15.nupkg.sha512"
+  ],
   "logs": []
 }
