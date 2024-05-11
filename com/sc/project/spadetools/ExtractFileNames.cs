@@ -244,7 +244,7 @@ namespace com.sc.project.spadetools {
                 // Record all files in the directory
                 foreach (string internalFile in Directory.GetFiles(directory))
                 {
-                    writtenDirectories.Add((isIncludeFilepaths ? directory + "\\" : String.Empty) + internalFile);
+                    writtenDirectories.Add(isIncludeFilepaths ? internalFile : Path.GetFileName(internalFile));
                 }
 
                 // Recurse for each internal directory
