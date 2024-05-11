@@ -15,7 +15,6 @@ namespace com.sc.project.spadetools {
         private List<string> failedDirectories;
         private List<string> writtenDirectories;
         private string _rootDirectory;
-        private string _saveDirectory;
         private string saveFile;
 
         // Properties
@@ -78,7 +77,6 @@ namespace com.sc.project.spadetools {
                     else if (i == 0)
                     {
                         SetProperties("--root", arguments[0]);
-                        SetProperties("--save", RootDirectory);
                     }
                 }
             }
@@ -215,7 +213,7 @@ namespace com.sc.project.spadetools {
         }
         #endregion SetRootDirectory
 
-        #region SetSaveDirectory
+        #region SetSaveFile
         private void SetSaveFile(string parameter)
         {
             // If directory is given, default the save file
@@ -226,7 +224,7 @@ namespace com.sc.project.spadetools {
             }
             saveFile = parameter;
         }
-        #endregion SetSaveDirectory
+        #endregion SetSaveFile
 
         #endregion Pre-Processes
 
@@ -261,6 +259,11 @@ namespace com.sc.project.spadetools {
         {
             try
             {
+                // If save file was never set, create default file under root directory
+                if (String.IsNullOrEmpty(saveFile))
+                {
+                    SetSaveFile(RootDirectory);
+                }
                 // Validate that the save directory exists, create it not
                 if (!File.Exists(saveFile))
                 {
