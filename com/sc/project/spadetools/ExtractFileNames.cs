@@ -264,7 +264,7 @@ namespace com.sc.project.spadetools {
                 {
                     SetSaveFile(RootDirectory);
                 }
-                // Validate that the save directory exists, create it not
+                // Validate that the save file exists, create it not
                 if (!File.Exists(saveFile))
                 {
                     File.Create(saveFile);
