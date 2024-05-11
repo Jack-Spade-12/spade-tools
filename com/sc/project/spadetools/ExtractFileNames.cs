@@ -1,7 +1,4 @@
 
-using System.IO;
-using System.Text;
-
 namespace com.sc.project.spadetools {
     
     class ExtractFileNames {
@@ -81,7 +78,7 @@ namespace com.sc.project.spadetools {
                     else if (i == 0)
                     {
                         SetProperties("--root", arguments[0]);
-                        SetProperties("--save", RootDirectory + "\\extractedFileNames.txt");
+                        SetProperties("--save", RootDirectory);
                     }
                 }
             }
@@ -221,10 +218,11 @@ namespace com.sc.project.spadetools {
         #region SetSaveDirectory
         private void SetSaveFile(string parameter)
         {
-            // Validate that the save directory exists
-            if (!File.Exists(parameter))
+            // If directory is given, default the save file
+            if (Directory.Exists(parameter))
             {
-                File.Create(parameter);
+                SetSaveFile(parameter + "\\extractedFileNames.txt");
+                return;
             }
             saveFile = parameter;
         }
@@ -263,6 +261,12 @@ namespace com.sc.project.spadetools {
         {
             try
             {
+                // Validate that the save directory exists, create it not
+                if (!File.Exists(saveFile))
+                {
+                    File.Create(saveFile);
+                }
+
                 writtenDirectories.Sort();
                 File.WriteAllLines(saveFile, writtenDirectories);
             }
