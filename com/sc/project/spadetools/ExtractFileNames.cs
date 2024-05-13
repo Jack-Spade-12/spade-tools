@@ -264,13 +264,10 @@ namespace com.sc.project.spadetools {
                 {
                     SetSaveFile(RootDirectory);
                 }
-                // Validate that the save file exists, create it not
-                if (!File.Exists(saveFile))
-                {
-                    File.Create(saveFile);
-                }
-
+                
                 writtenDirectories.Sort();
+                // Close the file before writing
+                using (File.Create(saveFile)) { }  
                 File.WriteAllLines(saveFile, writtenDirectories);
             }
             catch (Exception)
