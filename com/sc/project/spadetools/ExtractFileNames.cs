@@ -16,6 +16,7 @@ namespace com.sc.project.spadetools {
         private List<string> writtenDirectories;
         private string _rootDirectory;
         private string saveFile;
+        private int COUNTER_LIMIT = 2000;
 
         // Properties
         public string RootDirectory
@@ -236,9 +237,21 @@ namespace com.sc.project.spadetools {
             try
             {
                 // Record all files in the directory
+                int counter = 1;
                 foreach (string internalFile in Directory.GetFiles(directory))
                 {
                     writtenDirectories.Add(isIncludeFilepaths ? internalFile : Path.GetFileName(internalFile));
+                    
+                    // Write all lines when limit is reached to reduce memory usage
+                    if (counter == COUNTER_LIMIT)
+                    {
+                        WriteIntoFile();
+                        counter = 1;
+                    }
+                    else
+                    {
+                        counter++;
+                    }
                 }
 
                 // Recurse for each internal directory
@@ -269,6 +282,7 @@ namespace com.sc.project.spadetools {
                 // Close the file before writing
                 using (File.Create(saveFile)) { }  
                 File.WriteAllLines(saveFile, writtenDirectories);
+                writtenDirectories.Clear();
             }
             catch (Exception)
             {
