@@ -1,4 +1,7 @@
 
+using System.Runtime.ExceptionServices;
+using System.Text.RegularExpressions;
+
 namespace com.sc.project.spadetools {
     
     class ExtractFileNames {
@@ -10,10 +13,13 @@ namespace com.sc.project.spadetools {
 
         // Variables
         private bool isIncludeFilepaths;
+        private bool useBlackList;
         private List<string> files;
         private List<string> fileTypes;
         private List<string> failedDirectories;
         private List<string> writtenDirectories;
+        private List<string> excludedFiles;
+        private List<Regex> patterns;
         private string _rootDirectory;
         private string saveFile;
 
@@ -43,7 +49,9 @@ namespace com.sc.project.spadetools {
                 fileTypes = new List<string>();
                 failedDirectories = new List<string>();
                 writtenDirectories = new List<string>();
+                patterns = new List<Regex>();
                 isIncludeFilepaths = true;
+                useBlackList = false;
 
                 // Execute main instructions
                 ProcessArguments(arguments);
@@ -122,6 +130,11 @@ namespace com.sc.project.spadetools {
 
                     case "--save":
                         SetSaveFile(parameter);
+                        break;
+
+                    case "--exclude":
+                    case "-ex":
+                        SetExcludedFiles(parameter);
                         break;
                 }
             }
@@ -226,6 +239,61 @@ namespace com.sc.project.spadetools {
         }
         #endregion SetSaveFile
 
+        #region SetExcludedFiles
+        private void SetExcludedFiles(string parameters)
+        {
+            patterns.Clear();
+            useBlackList = true;
+            
+            excludedFiles = parameters.Split("|").ToList();
+            foreach (string excludedFile in excludedFiles)
+            {
+                SetPatterns(excludedFile);
+            }
+        }
+        #endregion SetExcludedFiles
+
+        #region SetPatterns
+        private void SetPatterns(string parameter)
+        {
+            string regexBuild = "";
+            // Handle the escape sequence
+            string completePattern = parameter.Replace(@"\", @"\\");
+            string[] splitPattern = completePattern.Trim().Split("*");
+            int splitPatternCount = splitPattern.Length;
+            
+            if (splitPatternCount == 1)
+            {
+                patterns.Add(new Regex(@parameter));
+                return;
+            }
+
+            for (int i = 0; i < splitPatternCount; i++)
+            {
+                // Asterisk at the very first
+                if (i == 0 && String.IsNullOrEmpty(splitPattern[i]))
+                {
+                    regexBuild += "^";
+                }
+                // Asterisk at the very last
+                else if (i == splitPatternCount - 1 && String.IsNullOrEmpty(splitPattern[i]))
+                {
+                    regexBuild += "$";
+                }
+                else if (i > 1 && i < splitPatternCount)
+                {
+                    regexBuild += ".*";
+                }
+                else
+                {
+                    regexBuild += splitPattern[i];
+                }
+            }
+
+            patterns.Add(new Regex(regexBuild));
+        }
+        #endregion SetPatterns
+
         #endregion Pre-Processes
 
         #region Main Process
@@ -238,6 +306,10 @@ namespace com.sc.project.spadetools {
                 // Record all files in the directory
                 foreach (string internalFile in Directory.GetFiles(directory))
                 {
+                    if (useBlackList && IsBlackListed(internalFile))
+                    {
+                        continue;
+                    }
                     writtenDirectories.Add(isIncludeFilepaths ? internalFile : Path.GetFileName(internalFile));
                 }
 
@@ -253,6 +325,32 @@ namespace com.sc.project.spadetools {
             }
         }
         #endregion Process
+
+        #region IsBlackListed 
+        private bool IsBlackListed(string parameter)
+        {
+            foreach (string excludedFile in excludedFiles)
+            {
+                if (IsPatternMatch(excludedFile, parameter))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        #endregion IsBlackListed
+
+        #region IsPatternMatch
+        private bool IsPatternMatch(string mainPattern, string parameter)
+        {
+            string[] patterns = mainPattern.Split("*");
+            foreach (string pattern in patterns)
+            {
+
+            }
+            return true;
+        }
+        #endregion IsPatternMatch
 
         #region WriteIntoFile
         private void WriteIntoFile()
